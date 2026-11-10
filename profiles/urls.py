@@ -1,3 +1,9 @@
+"""
+URL routes for the profiles app.
+
+All URLs are namespaced under the 'profiles' app name.
+"""
+
 from django.urls import path
 from . import views
 

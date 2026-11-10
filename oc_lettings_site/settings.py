@@ -1,3 +1,10 @@
+"""
+Django settings for the oc_lettings_site project.
+
+Contains the project configuration: security, applications,
+middleware, database, templates and static files.
+"""
+
 import os
 
 from pathlib import Path

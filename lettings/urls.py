@@ -1,3 +1,9 @@
+"""
+URL routes for the lettings app.
+
+All URLs are namespaced under the 'lettings' app name.
+"""
+
 from django.urls import path
 from . import views
 
