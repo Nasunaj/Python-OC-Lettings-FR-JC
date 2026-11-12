@@ -1,3 +1,10 @@
+"""
+Root URL configuration of the oc_lettings_site project.
+
+Routes the home page and includes the lettings and profiles
+apps under their respective namespaces.
+"""
+
 from django.contrib import admin
 from django.urls import path, include
 
