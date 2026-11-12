@@ -7,6 +7,8 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ('oc_lettings_site', '0001_initial'),
+        # ne pas supprimer avant la copie
+        ('lettings', '0002_copy_address_letting_data'),
     ]
 
     operations = [
