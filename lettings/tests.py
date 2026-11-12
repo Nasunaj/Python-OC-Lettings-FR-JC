@@ -78,6 +78,7 @@ class TestLettingsViews:
         assert response.context['title'] == "Courtside flat at Madison Square Garden"
         assert response.context['address'] == letting_obj.address
 
+
 class TestLettingsUrls:
     """Tests for the lettings URL routes (no DB needed)."""
 
