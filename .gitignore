@@ -8,3 +8,4 @@ oc-lettings-site.sqlite3
 .coverage
 .pytest_cache/
 htmlcov/
+staticfiles/
