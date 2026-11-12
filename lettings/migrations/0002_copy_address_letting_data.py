@@ -42,6 +42,7 @@ class Migration(migrations.Migration):
 
     dependencies = [
         ("lettings", "0001_initial"),
+        ("oc_lettings_site", "0001_initial"),  # anciens modèles Address/Letting
     ]
 
     operations = [
