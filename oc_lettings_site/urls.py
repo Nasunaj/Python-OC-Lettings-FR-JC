@@ -15,4 +15,5 @@ urlpatterns = [
     path('lettings/', include("lettings.urls")),
     path('profiles/', include("profiles.urls")),
     path('admin/', admin.site.urls),
+    path('debug-sentry/', views.trigger_error, name='trigger_error'),
 ]
