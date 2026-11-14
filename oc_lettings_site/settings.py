@@ -4,7 +4,7 @@ Django settings for the oc_lettings_site project.
 Contains the project configuration: security, applications,
 middleware, database, templates and static files.
 """
-
+import logging
 import os
 
 from pathlib import Path
@@ -18,11 +18,32 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # Missing file or variables fall back to defaults for local development.
 dotenv.load_dotenv(BASE_DIR / ".env")
 
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
+from sentry_sdk.integrations.logging import LoggingIntegration
+
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = os.environ.get("SECRET_KEY", "insecure-dev-key-change-me")
+
+# Sentry error tracking: disabled when SENTRY_DSN is not set
+# (local development without a Sentry project, CI...).
+SENTRY_DSN = os.environ.get("SENTRY_DSN", "")
+if SENTRY_DSN:
+    sentry_sdk.init(
+        dsn=SENTRY_DSN,
+        integrations=[
+            DjangoIntegration(),
+            LoggingIntegration(
+                level=logging.INFO,
+                event_level=logging.ERROR,
+            ),
+        ],
+        traces_sample_rate=1.0,
+        send_default_pii=False,
+    )
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
