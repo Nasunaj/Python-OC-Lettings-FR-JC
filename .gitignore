@@ -3,7 +3,6 @@
 venv
 cours/
 .idea/
-oc-lettings-site.sqlite3
 
 .coverage
 .pytest_cache/
