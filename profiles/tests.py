@@ -3,6 +3,9 @@ Unit and integration tests for the profiles app.
 
 Covers the Profile model, the views and the URL routes.
 """
+
+import logging
+
 import pytest
 
 from django.contrib.auth.models import User
@@ -66,6 +69,27 @@ class TestProfilesViews:
         )
         assert response.status_code == 200
         assert response.context['profile'] == profile_obj
+
+    def test_index_logs_info_message(self, client, profile_obj, caplog):
+        """The index view must log an INFO message."""
+        with caplog.at_level(logging.INFO, logger="profiles.views"):
+            client.get(reverse('profiles:index'))
+        assert any(
+            "Rendering the profiles list page" in rec.getMessage()
+            for rec in caplog.records
+        )
+
+    def test_profile_view_returns_404_for_missing_profile(self, client, caplog):
+        """A missing profile must return 404 and log a WARNING."""
+        with caplog.at_level(logging.WARNING, logger="profiles.views"):
+            response = client.get(
+                reverse('profiles:profile', args=['no-such-user'])
+            )
+        assert response.status_code == 404
+        assert any(
+            "Profile not found" in rec.getMessage()
+            for rec in caplog.records
+        )
 
 
 class TestProfilesUrls:
