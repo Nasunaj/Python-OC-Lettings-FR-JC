@@ -46,11 +46,18 @@ if SENTRY_DSN:
         send_default_pii=False,
     )
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# Lecture depuis l'environnement, ce qui permet d'utiliser la même image en
+# développement
+# (DEBUG=True) et en production (DEBUG=False, par exemple sur Render).
+DEBUG = os.environ.get("DEBUG", "True") == "True"
 
-# Pas d'impact si debug égale True
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+# Hôtes autorisés à servir l'application lorsque DEBUG est défini sur False
+# (protection contre les attaques par en-tête Host). Configurez l'hôte de
+# production (par ex. "oc-lettings.onrender.com") via cette variable
+# d'environnement.
+ALLOWED_HOSTS = os.environ.get(
+    "ALLOWED_HOSTS", "localhost,127.0.0.1"
+).split(",")
 
 
 # Application definition
@@ -69,6 +76,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -145,10 +153,16 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
+STATIC_URL = '/static/'
+
+# Directory collected by "collectstatic" and served by WhiteNoise.
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-STATIC_URL = '/static/'
+# Project-level static files picked up by collectstatic.
 STATICFILES_DIRS = [BASE_DIR / "static", ]
+
+# Serve static files efficiently in production (WhiteNoise).
+STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 # Logging configuration: messages are written to the console and,
 # through the Sentry logging integration, ERROR-level messages
