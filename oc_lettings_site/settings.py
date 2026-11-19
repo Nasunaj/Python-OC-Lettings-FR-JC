@@ -162,7 +162,14 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 STATICFILES_DIRS = [BASE_DIR / "static", ]
 
 # Serve static files efficiently in production (WhiteNoise).
-STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+# In production (DEBUG=False): manifest storage adds cache-busting
+# fingerprints to every file URL. In development (DEBUG=True), the
+# plain compressed storage avoids requiring a collectstatic run
+# before tests or runserver.
+if not DEBUG:
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+else:
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
 
 # Logging configuration: messages are written to the console and,
 # through the Sentry logging integration, ERROR-level messages
