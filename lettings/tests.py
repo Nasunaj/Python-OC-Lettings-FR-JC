@@ -3,6 +3,9 @@ Unit and integration tests for the lettings app.
 
 Covers the Address and Letting models, the views and the URL routes.
 """
+
+import logging
+
 import pytest
 
 from django.urls import resolve, reverse
@@ -77,6 +80,27 @@ class TestLettingsViews:
         assert response.status_code == 200
         assert response.context['title'] == "Courtside flat at Madison Square Garden"
         assert response.context['address'] == letting_obj.address
+
+    def test_index_logs_info_message(self, client, letting_obj, caplog):
+        """The index view must log an INFO message."""
+        with caplog.at_level(logging.INFO, logger="lettings.views"):
+            client.get(reverse('lettings:index'))
+        assert any(
+            "Rendering lettings list page" in rec.getMessage()
+            for rec in caplog.records
+        )
+
+    def test_letting_view_returns_404_for_missing_letting(self, client, caplog):
+        """A missing letting id must return 404 and log a WARNING."""
+        with caplog.at_level(logging.WARNING, logger="lettings.views"):
+            response = client.get(
+                reverse('lettings:letting', args=[99999])
+            )
+        assert response.status_code == 404
+        assert any(
+            "Letting not found" in rec.getMessage()
+            for rec in caplog.records
+        )
 
 
 class TestLettingsUrls:

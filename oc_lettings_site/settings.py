@@ -4,20 +4,47 @@ Django settings for the oc_lettings_site project.
 Contains the project configuration: security, applications,
 middleware, database, templates and static files.
 """
-
+import logging
 import os
 
 from pathlib import Path
 
+import dotenv
+
+
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
+from sentry_sdk.integrations.logging import LoggingIntegration
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Load environment variables from the .env file (git-ignored).
+# Missing file or variables fall back to defaults for local development.
+dotenv.load_dotenv(BASE_DIR / ".env")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'fp$9^593hsriajg$_%=5trot9g!1qa@ew(o-1#@=&4%=hp46(s'
+SECRET_KEY = os.environ.get("SECRET_KEY", "insecure-dev-key-change-me")
+
+# Sentry error tracking: disabled when SENTRY_DSN is not set
+# (local development without a Sentry project, CI...).
+SENTRY_DSN = os.environ.get("SENTRY_DSN", "")
+if SENTRY_DSN:
+    sentry_sdk.init(
+        dsn=SENTRY_DSN,
+        integrations=[
+            DjangoIntegration(),
+            LoggingIntegration(
+                level=logging.INFO,
+                event_level=logging.ERROR,
+            ),
+        ],
+        traces_sample_rate=1.0,
+        send_default_pii=False,
+    )
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -122,3 +149,43 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
 STATIC_URL = '/static/'
 STATICFILES_DIRS = [BASE_DIR / "static", ]
+
+# Logging configuration: messages are written to the console and,
+# through the Sentry logging integration, ERROR-level messages
+# and above are also sent to Sentry (see sentry_sdk.init above).
+LOGGING = {
+    "version": 1,
+    # Keep Django's own loggers (e.g. django.server) alive.
+    "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {
+            "format": "{asctime} {levelname} {name} {message}",
+            "style": "{",
+        },
+    },
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "verbose",
+        },
+    },
+    "loggers": {
+        # Root logger: every application logger inherits from it.
+        "": {
+            "handlers": ["console"],
+            "level": "INFO",
+        },
+        # Unhandled exceptions in views: full detail, errors only.
+        "django.request": {
+            "handlers": ["console"],
+            "level": "ERROR",
+            "propagate": False,
+        },
+        # Development server traffic: keep Django's default behaviour.
+        "django.server": {
+            "handlers": ["console"],
+            "level": "INFO",
+            "propagate": False,
+        },
+    },
+}
