@@ -10,7 +10,7 @@ on:
 jobs:
   quality:
     name: Lint and tests (flake8, pytest, coverage)
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
@@ -34,7 +34,7 @@ jobs:
     name: Build and push Docker image to Docker Hub
     needs: quality
     if: github.ref == 'refs/heads/main'
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-22.04
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
