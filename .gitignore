@@ -9,3 +9,4 @@ oc-lettings-site.sqlite3
 .pytest_cache/
 htmlcov/
 staticfiles/
+.env

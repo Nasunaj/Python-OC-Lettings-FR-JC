@@ -4,26 +4,60 @@ Django settings for the oc_lettings_site project.
 Contains the project configuration: security, applications,
 middleware, database, templates and static files.
 """
-
+import logging
 import os
 
 from pathlib import Path
 
+import dotenv
+
+
+import sentry_sdk
+from sentry_sdk.integrations.django import DjangoIntegration
+from sentry_sdk.integrations.logging import LoggingIntegration
+
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
 BASE_DIR = Path(__file__).resolve().parent.parent
 
+# Load environment variables from the .env file (git-ignored).
+# Missing file or variables fall back to defaults for local development.
+dotenv.load_dotenv(BASE_DIR / ".env")
 
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'fp$9^593hsriajg$_%=5trot9g!1qa@ew(o-1#@=&4%=hp46(s'
+SECRET_KEY = os.environ.get("SECRET_KEY", "insecure-dev-key-change-me")
 
-# SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+# Sentry error tracking: disabled when SENTRY_DSN is not set
+# (local development without a Sentry project, CI...).
+SENTRY_DSN = os.environ.get("SENTRY_DSN", "")
+if SENTRY_DSN:
+    sentry_sdk.init(
+        dsn=SENTRY_DSN,
+        integrations=[
+            DjangoIntegration(),
+            LoggingIntegration(
+                level=logging.INFO,
+                event_level=logging.ERROR,
+            ),
+        ],
+        traces_sample_rate=1.0,
+        send_default_pii=False,
+    )
 
-# Pas d'impact si debug égale True
-ALLOWED_HOSTS = ['localhost', '127.0.0.1']
+# Lecture depuis l'environnement, ce qui permet d'utiliser la même image en
+# développement
+# (DEBUG=True) et en production (DEBUG=False, par exemple sur Render).
+DEBUG = os.environ.get("DEBUG", "True") == "True"
+
+# Hôtes autorisés à servir l'application lorsque DEBUG est défini sur False
+# (protection contre les attaques par en-tête Host). Configurez l'hôte de
+# production (par ex. "oc-lettings.onrender.com") via cette variable
+# d'environnement.
+ALLOWED_HOSTS = os.environ.get(
+    "ALLOWED_HOSTS", "localhost,127.0.0.1"
+).split(",")
 
 
 # Application definition
@@ -42,6 +76,7 @@ INSTALLED_APPS = [
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
+    'whitenoise.middleware.WhiteNoiseMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -118,7 +153,60 @@ USE_TZ = True
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/3.0/howto/static-files/
 
+STATIC_URL = '/static/'
+
+# Directory collected by "collectstatic" and served by WhiteNoise.
 STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 
-STATIC_URL = '/static/'
+# Project-level static files picked up by collectstatic.
 STATICFILES_DIRS = [BASE_DIR / "static", ]
+
+# Serve static files efficiently in production (WhiteNoise).
+# In production (DEBUG=False): manifest storage adds cache-busting
+# fingerprints to every file URL. In development (DEBUG=True), the
+# plain compressed storage avoids requiring a collectstatic run
+# before tests or runserver.
+if not DEBUG:
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
+else:
+    STATICFILES_STORAGE = 'whitenoise.storage.CompressedStaticFilesStorage'
+
+# Logging configuration: messages are written to the console and,
+# through the Sentry logging integration, ERROR-level messages
+# and above are also sent to Sentry (see sentry_sdk.init above).
+LOGGING = {
+    "version": 1,
+    # Keep Django's own loggers (e.g. django.server) alive.
+    "disable_existing_loggers": False,
+    "formatters": {
+        "verbose": {
+            "format": "{asctime} {levelname} {name} {message}",
+            "style": "{",
+        },
+    },
+    "handlers": {
+        "console": {
+            "class": "logging.StreamHandler",
+            "formatter": "verbose",
+        },
+    },
+    "loggers": {
+        # Root logger: every application logger inherits from it.
+        "": {
+            "handlers": ["console"],
+            "level": "INFO",
+        },
+        # Unhandled exceptions in views: full detail, errors only.
+        "django.request": {
+            "handlers": ["console"],
+            "level": "ERROR",
+            "propagate": False,
+        },
+        # Development server traffic: keep Django's default behaviour.
+        "django.server": {
+            "handlers": ["console"],
+            "level": "INFO",
+            "propagate": False,
+        },
+    },
+}

@@ -18592,36 +18592,6 @@ body {
   overflow-y: auto;
 }
 
-.card-waves .card-body,
-.card-angles .card-body {
-  background-size: 100% auto;
-  background-repeat: no-repeat;
-  background-position: center bottom;
-}
-
-.card-waves .card-body {
-  background-image: url("../assets/img/backgrounds/bg-waves.svg");
-}
-
-.card-angles .card-body {
-  background-image: url("../assets/img/backgrounds/bg-angles.svg");
-}
-
-.card-flag {
-  position: absolute;
-  font-size: 0.7rem;
-  padding: 0.3rem 0.5rem;
-  line-height: 1;
-}
-
-.card-flag-dark {
-  background-color: rgba(33, 40, 50, 0.7);
-  color: #fff;
-}
-
-.card-flag-light {
-  background-color: rgba(255, 255, 255, 0.7);
-  color: #69707a;
 }
 
 .card-flag-lg {
@@ -20057,7 +20027,6 @@ section {
 
 .device[data-device=iPhoneX][data-orientation=portrait][data-color=black] {
   padding-bottom: 198.89807163%;
-  background-image: url("../assets/img/device-mockups/iPhoneX/portrait.png");
   z-index: initial;
 }
 
@@ -20072,7 +20041,6 @@ section {
 
 .device[data-device=iPhoneX][data-orientation=landscape][data-color=black] {
   padding-bottom: 50.27700831%;
-  background-image: url("../assets/img/device-mockups/iPhoneX/landscape.png");
   z-index: initial;
 }
 
@@ -20098,7 +20066,6 @@ section {
 
 .device[data-device=iPhoneX][data-orientation=portrait][data-color=black]::after {
   content: "";
-  background-image: url("../assets/img/device-mockups/iPhoneX/portrait_black.png");
 }
 
 .device[data-device=iPhoneX][data-orientation=portrait][data-color=black] .button {
@@ -20122,7 +20089,6 @@ section {
 
 .device[data-device=iPhoneX][data-orientation=landscape][data-color=black]::after {
   content: "";
-  background-image: url("../assets/img/device-mockups/iPhoneX/landscape_black.png");
 }
 
 .device[data-device=iPhoneX][data-orientation=landscape][data-color=black] .button {
