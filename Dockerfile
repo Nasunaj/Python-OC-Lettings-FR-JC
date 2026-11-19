@@ -14,9 +14,10 @@ RUN pip install --no-cache-dir -r requirements.txt
 # Copy the application code and the SQLite database into the image.
 COPY . .
 
-# Collect static files inside the image so WhiteNoise can serve them
-# (DEBUG=False in production: Django cannot serve them itself).
-RUN SECRET_KEY=docker-build-placeholder DEBUG=True python manage.py collectstatic --noinput
+# Collect static files inside the image in PRODUCTION mode (DEBUG=False):
+# this generates the WhiteNoise manifest (staticfiles.json) that the
+# runtime expects, since the container also runs with DEBUG=False.
+RUN SECRET_KEY=docker-build-placeholder DEBUG=False python manage.py collectstatic --noinput
 
 # Port used by gunicorn inside the container.
 EXPOSE 8000
