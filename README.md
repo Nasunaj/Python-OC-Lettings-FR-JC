@@ -7,6 +7,7 @@ Site web d'Orange County Lettings, refonte du projet OpenClassrooms.
 - [Installation](docs/installation.md)
 - [Architecture](docs/architecture.md)
 - [Qualité (lint, tests, couverture)](docs/quality.md)
+- [Monitoring](docs/monitoring.md)
 
 ## Démarrage rapide
 
