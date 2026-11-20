@@ -11,13 +11,18 @@ Django web app listing holiday rental properties and user profiles.
 - Docker image: https://hub.docker.com/r/nasunaj/oc-lettings
 - CI pipeline: https://github.com/Nasunaj/Python-OC-Lettings-FR-JC/actions
 
+[![Documentation Status](https://readthedocs.org/projects/oc-lettings-jc/badge/?version=latest)](https://oc-lettings-jc.readthedocs.io/en/latest/)
+
 ## Documentation
 
-- [Installation](docs/installation.md)
-- [Architecture](docs/architecture.md)
-- [Qualité (lint, tests, couverture)](docs/quality.md)
-- [Monitoring](docs/monitoring.md)
-- [Deployment (CI/CD, Docker, Render)](docs/deployment.md)
+Full documentation is published on Read the Docs: https://oc-lettings-jc.readthedocs.io/
+
+- [Installation](https://oc-lettings-jc.readthedocs.io/en/latest/installation/)
+- [Architecture](https://oc-lettings-jc.readthedocs.io/en/latest/architecture/)
+- [Quality](https://oc-lettings-jc.readthedocs.io/en/latest/quality/)
+- [Monitoring](https://oc-lettings-jc.readthedocs.io/en/latest/monitoring/)
+- [Deployment](https://oc-lettings-jc.readthedocs.io/en/latest/deployment/)
+- [API reference](https://oc-lettings-jc.readthedocs.io/en/latest/api/lettings/)
 
 ## Quick start (local)
 
