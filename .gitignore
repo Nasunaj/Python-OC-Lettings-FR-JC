@@ -9,3 +9,5 @@ cours/
 htmlcov/
 staticfiles/
 .env
+
+docs/_build/
