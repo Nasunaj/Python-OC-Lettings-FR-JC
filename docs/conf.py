@@ -10,7 +10,7 @@ import sys
 sys.path.insert(0, os.path.abspath('..'))
 
 # Initialize Django so autodoc can import models and views.
-import django
+import django  # noqa: E402
 os.environ['DJANGO_SETTINGS_MODULE'] = 'oc_lettings_site.settings'
 django.setup()
 
