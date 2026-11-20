@@ -1,25 +1,28 @@
-# Qualité
+# Quality
 
 ## Linting
 
-- Outil : flake8 (config dans `setup.cfg`, `max-line-length = 99`)
-- Commande : `flake8`
-- Statut : 0 erreur (étape 2 terminée)
+- Tool: flake8 (configuration in `setup.cfg`, `max-line-length = 99`)
+- Command: `flake8`
+- Status: 0 error
 
 ## Tests
 
-- Outils : pytest, pytest-django
-- Tests placés dans chaque app : `lettings/tests.py`, `profiles/tests.py`,
+- Tools: pytest, pytest-django
+- Tests live in each app: `lettings/tests.py`, `profiles/tests.py`,
   `oc_lettings_site/tests.py`
-- Commande : `pytest`
+- Command: `pytest`
+- Status: 24 tests, all passing (models, views, URLs, logging behaviour)
 
-## Couverture
+## Coverage
 
-- Outil : pytest-cov (exclusions dans `setup.cfg`, section `[coverage:run]`)
-- Commande : `pytest --cov=. --cov-report=term-missing`
-- Statut : 20 tests, 92 % de couverture (critère du brief : > 80 %)
-- Exclusions : migrations, fichiers de test, apps.py, manage.py
+- Tool: pytest-cov (exclusions in `setup.cfg`, `[coverage:run]` section)
+- Command: `pytest --cov=. --cov-report=term-missing`
+- Status: 93% total coverage (brief requirement: > 80%)
+- All application modules (models, views, URLs, admin) are covered at 100%;
+  only the ASGI/WSGI entry points and one settings line remain uncovered
+- Exclusions: migrations, test files, apps.py, manage.py
 
-## Convention des commits
+## Commit convention
 
-Format conventional : `Feat:`, `Fix:`, `Docs:`, `Test:`, `Chore:`
+Conventional format: `Feat:`, `Fix:`, `Docs:`, `Test:`, `Chore:`
