@@ -1,29 +1,29 @@
 # Installation
 
-## Prérequis
+## Prerequisites
 
-- Python 3.8 ou supérieur
+- Python 3.8 or later
 - Git
 - SQLite3
 
-## Installation
+## Setup
 
-- Cloner le repository :
+- Clone the repository:
   `git clone https://github.com/Nasunaj/Python-OC-Lettings-FR-JC.git`
-- Créer et activer l'environnement virtuel :
+- Create and activate a virtual environment:
   `python -m venv venv`
-  `source venv/bin/activate` (Linux/Mac) ou `.\\venv\\Scripts\\Activate.ps1` (Windows)
-- Installer les dépendances :
+  `source venv/bin/activate` (Linux/Mac) or `.\venv\Scripts\Activate.ps1` (Windows)
+- Install dependencies:
   `pip install -r requirements.txt`
-- Appliquer les migrations :
+- Apply migrations:
   `python manage.py migrate`
 
-## Lancer le site
+## Run the site
 
 - `python manage.py runserver`
-- Ouvrir `http://localhost:8000`
+- Open `http://localhost:8000`
 
-## Panel d'administration
+## Admin panel
 
-- Ouvrir `http://localhost:8000/admin`
-- Utilisateur : `admin` / Mot de passe : `Abc1234!`
+- Open `http://localhost:8000/admin`
+- User: `admin` / Password: `Abc1234!`
